@@ -1,0 +1,20 @@
+{
+  "name": "rln-smartcontract-develop",
+  "version": "1.0.0",
+  "description": "develope and test an rln smartcontract",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "RLN",
+    "Develop",
+    "Test"
+  ],
+  "author": "SETL",
+  "license": "MIT",
+  "dependencies": {
+    "@setl/rln_smartcontract_sdk": "^1.0.0",
+    "mocha": "^10.2.0"
+  }
+}
