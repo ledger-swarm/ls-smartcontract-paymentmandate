@@ -14,7 +14,7 @@
   "author": "SETL",
   "license": "MIT",
   "dependencies": {
-    "@setl/rln_smartcontract_sdk": "^1.0.0",
+    "@ledgerswarm/ls_smartcontract_vm": "^1.0.6",
     "mocha": "^10.2.0"
   }
 }

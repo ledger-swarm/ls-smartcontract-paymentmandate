@@ -1,5 +1,5 @@
 var assert = require('assert');
-const RLNSmartContract = require("@setl/rln_smartcontract_sdk");
+const RLNSmartContract = require("@ledgerswarm/ls_smartcontract_vm");
 const path = require('path');
 
 let state0={};
