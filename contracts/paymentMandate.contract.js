@@ -16,11 +16,11 @@ Schema components used to buld the genesis schemas and function schemas
 --------------------------------------------------------------------------------*/
 
 const partitions = [
-  "DEMOUS01XXX - bank1",
-  "DEMOUS01BR1 - bank1branch",
-  "DEMOUS02XXX - bank2",
-  "DEMOUS02BR1 - bank2branch",
-  "CENTRLBK - central"
+  "DEMOUS01XXX",
+  "DEMOUS01BR1",
+  "DEMOUS02XXX",
+  "DEMOUS02BR1",
+  "CENTRLBK"
 ];
   
 const partitionSchema = {
@@ -72,21 +72,25 @@ const genesisDataSchema = {
   type: "object",
   properties: {
     comment: { type: "string" },
+    payerDomain: { type: "string" , enum: ["DOMAIN"] },
     payerPartition: partitionSchema,
     payerAddress: { type: "string" },
+    receiverDomain: { type: "string" , enum: ["DOMAIN"] },
     receiverPartition: partitionSchema,
     receiverAddress: { type: "string" },
-    currency: { type: "string" , enum: ["USD"]},
+    assetId: { type: "string" },
     amount: { type: "number" },
     status: { type: "string", enum: ["initialized"] },
   },
   required: [
     "comment",
+    "payerDomain",
     "payerPartition",
     "payerAddress",
+    "receiverDomain",
     "receiverPartition",
     "receiverAddress",
-    "currency",
+    "assetId",
     "amount",
     "status"
   ],
@@ -302,23 +306,29 @@ function makePayment(caller, partyRoles, contractState, inputs) {
     // set the action
     action.type="RLNCREATE"
     action.atomicGroup = [];
+
     transaction={}
     transaction.action = "create";
-    transaction.debtor = payer;
-    transaction.debtorAccount = contractState.data.payerAddress;
-    transaction.debtorAgent = contractState.data.payerPartition;
-    transaction.creditor = receiver;
-    transaction.creditorAccount = contractState.data.receiverAddress;
-    transaction.creditorAgent = contractState.data.receiverPartition;
+
+    transaction.fromAccount = contractState.data.payerAddress;
+    transaction.fromDomain = contractState.data.payerDomain;
+    transaction.fromParticipant = contractState.data.payerPartition;
+
+    transaction.toAccount = contractState.data.receiverAddress;
+    transaction.toDomain = contractState.data.receiverDomain;
+    transaction.toParticipant = contractState.data.receiverPartition;
+
     transaction.amount = contractState.data.amount;
-    transaction.currency = contractState.data.currency;
+    transaction.assetId = contractState.data.assetId;
     action.atomicGroup.push(transaction);
+
     action.consensus = [];
     let consensusObj = {};
     // set the parties who must confirm action has happened
     consensusObj.participant = receiver;
     consensusObj.status = "unconfirmed";
     action.consensus.push(consensusObj);
+
     // set the party who must submit the actions
     action.submitter = payer;
     action.status = "proposed";
